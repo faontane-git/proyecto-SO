@@ -3,11 +3,11 @@ CC = gcc
 FLAGS = -O2 -Wall -I . -o
 LIB = -lpthread
 
-merge: cliente.o $(FUNC)
-	$(CC) $(FLAGS) chasquiEats cliente.o csapp.o $(LIB)
+merge: chasquiEats.o $(FUNC)
+	$(CC) $(FLAGS) chasquiEats chasquiEats.o csapp.o $(LIB)
 
-cliente.o: cliente.c
-	gcc -c cliente.c
+chasquiEats.o: chasquiEats.c
+	gcc -c chasquiEats.c
 	
 csapp.o: csapp.c
 	gcc -c csapp.c
@@ -21,6 +21,4 @@ All:
 clean:
 	rm *.o merge
 	
-debug: mergeSort.c csapp.c
-	$(CC) -g $(FLAGS) merge mergeSort.c $(LIB)
-	gdb ./merge
+ 
