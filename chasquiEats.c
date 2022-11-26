@@ -60,30 +60,46 @@ int main(int argc, char *argv[]) {
   int i, x, ysize, max, opt, status = 0;
   int n = get_nprocs() - 1;
   pid_t cpid;
-  int dimension = 0;
-  int restaurantes=0;
+  int dimension = (int)strtol(argv[1], NULL, 10);
+  int restaurantes=(int)strtol(argv[2], NULL, 10);
   int arreglo[dimension][dimension];
 
   if (argc != 6) {
     printf("No hagas wuebadas ingresa bien\n");
     exit(1);
   } else {
-    // Creación del arreglo binario (1/0) donde 1 significa la presecia de un
+    // Creación del arreglo binario (1/0) donde 1 significa la presencia de un
     // restaurante en esa posición y 0 la no presencia del restaurante en esa
     // posición, incialzaremos la matrix en 0.
-    dimension = (int)strtol(argv[1], NULL, 10);
-    restaurantes = (int)strtol(argv[2], NULL, 10);
     if (dimension % 2 != 0) {
       if (dimension > 1) {
+        arreglo[dimension][dimension];
         for (int i = 0; i < dimension; i++) {
           for (int j = 0; j < dimension; j++) {
             arreglo[i][j] = 0;
+          }
+        }
+
+        int contador=0;
+        while (contador!=dimension)
+        {
+          int num1=0;
+          int num2=0;
+          srand(time(NULL)); 
+          num1=num_aleatorio(dimension);
+          num2=num_aleatorio(dimension);
+          if(arreglo[num1][num2]==0){
+            arreglo[num1][num2]=1;
+            contador+=1;
+          }else{
+            continue;
           }
         }
       } else {
         printf("No se puede crear una matriz de valor menor a 1");
         exit(1);
       }
+     
     } else {
       printf("No se puede crear una matriz con un valor par. No hagas wuebadas "
              "\n");
@@ -91,24 +107,6 @@ int main(int argc, char *argv[]) {
     }
   }
 
- int contador=0;
- srand(time(NULL)); // Generamos numero aleatorio en base al tiempo
- while (contador!=10)
- {
-  
-   arreglo[num_aleatorio(dimension)][num_aleatorio(dimension)]=1;
-    
-  contador+=1;
- }
-
- 
-for (int i = 0; i < dimension; i++) {
-    for (int j = 0; j < dimension; j++) {
-      printf("%d", arreglo[i][j]);
-    }
-    printf("\n");
-  }
- 
 
 
   return 0;
