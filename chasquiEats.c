@@ -5,12 +5,15 @@
 #include <string.h>
 #include <time.h> /* Nueva librería necesaria para la función srand */
 
+int motorizadosDisponibles = 0;
 
-struct coordenadas_grilla
+struct motorizados
 {
   int coordenada_x;
   int coordenada_y;
-  int valor;
+  bool disponible;
+  bool trabajando;
+  int recorrido;
 };
 
 void print_help()
@@ -21,30 +24,6 @@ void print_help()
          "		-h\n"
          "Opciones:\n"
          " -h	Ayuda,			Muestra este mensaje\n");
-}
-
-
-
-
-// FUNCION QUE SEPARA EL STRING EN TOKENS PARA PODER USARLOS RESPECTIVAMENTE
-/******************************************************************************/
-int separar_tokens(char *linea, char *delim, char *buf[])
-/******************************************************************************/
-{
-  char *token;
-  int i = 0;
-  /* obtiene el primer token */
-  token = strtok(linea, delim);
-
-  /* recorre todos los tokens */
-  while (token != NULL)
-  {
-    buf[i++] = token;
-    token = strtok(NULL, delim);
-  }
-  free(token);
-  buf[i++] = NULL;
-  return i;
 }
 
 // Para usar esta función para calcular la probabilidad que se necesite
@@ -72,7 +51,7 @@ int num_aleatorio(int dimension)
 /******************************************************************************/
 void *thread(void *vargp)
 {
- 
+  printf("Hola MUNDO");
 }
 
 int main(int argc, char *argv[])
@@ -86,6 +65,7 @@ int main(int argc, char *argv[])
   int restaurantes = (int)strtol(argv[2], NULL, 10);
   int intervalo = (int)strtol(argv[3], NULL, 10);
   int motorizados = (int)strtol(argv[4], NULL, 10);
+  motorizadosDisponibles = motorizados;
   int kilometros = (int)strtol(argv[5], NULL, 10);
   int arreglo[dimension][dimension];
 
@@ -155,28 +135,14 @@ int main(int argc, char *argv[])
           }
         }
         // Ubicación de los clientes
-        if (probabilidad(50) == 1)
+        while (motorizadosDisponibles > 0)
         {
-          if ((cpid = fork()) == 0)
+          sleep(intervalo / 1000);
+          pthread_t tid;
+          if (probabilidad(50) == 1)
           {
-            printf("INICIANDO PROCESO.\n");
-            pthread_t tid;
-
             Pthread_create(&tid, NULL, thread, NULL);
-
-            sleep(intervalo / 1000);
-
-            Pthread_exit(NULL);
           }
-          else if (cpid == -1)
-          {
-            perror("fork");
-            exit(EXIT_FAILURE);
-          }
-          else
-            waitpid(cpid, &status, WUNTRACED | WCONTINUED);
-          printf("[!] PROCESO TERMINADO\n");
-          // return 0;
         }
       }
       else
@@ -188,10 +154,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-      srand(time(NULL));
-      printf("%d", probabilidad(40));
-      printf("\n");
-      printf("No se puede crear una matriz con un valor par. No hagas wuebadas "
+      printf("No se puede crear una matriz con un valor par."
              "\n");
       exit(1);
     }
