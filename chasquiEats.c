@@ -5,6 +5,14 @@
 #include <string.h>
 #include <time.h> /* Nueva librería necesaria para la función srand */
 
+
+struct coordenadas_grilla
+{
+  int coordenada_x;
+  int coordenada_y;
+  int valor;
+};
+
 void print_help()
 /******************************************************************************/
 {
@@ -14,6 +22,9 @@ void print_help()
          "Opciones:\n"
          " -h	Ayuda,			Muestra este mensaje\n");
 }
+
+
+
 
 // FUNCION QUE SEPARA EL STRING EN TOKENS PARA PODER USARLOS RESPECTIVAMENTE
 /******************************************************************************/
@@ -40,7 +51,7 @@ int separar_tokens(char *linea, char *delim, char *buf[])
 bool probabilidad(int pProbabilidad)
 {
   float x = rand() % (101) / 100.0f;
-  if (x <= (pProbabilidad/100.0f))
+  if (x <= (pProbabilidad / 100.0f))
   {
     return true;
   }
@@ -56,10 +67,17 @@ int num_aleatorio(int dimension)
   numAleatoreo = rand() % dimension;
   return numAleatoreo;
 }
+
+// FUNCIÓN QUE EJECUTARÁ CADA HILO
+/******************************************************************************/
+void *thread(void *vargp)
+{
  
+}
 
 int main(int argc, char *argv[])
 {
+
   char *file_name_in = NULL;
   int i, x, ysize, max, opt, status = 0;
   int n = get_nprocs() - 1;
@@ -99,8 +117,8 @@ int main(int argc, char *argv[])
           }
         }
         // Ubicación de los restuarantes
-        int contador = 0;
-        while (contador != dimension)
+        int contador1 = 0;
+        while (contador1 != dimension)
         {
           int num1 = 0;
           int num2 = 0;
@@ -110,7 +128,7 @@ int main(int argc, char *argv[])
           if (arreglo[num1][num2] == 0)
           {
             arreglo[num1][num2] = 1;
-            contador += 1;
+            contador1 += 1;
           }
           else
           {
@@ -137,6 +155,29 @@ int main(int argc, char *argv[])
           }
         }
         // Ubicación de los clientes
+        if (probabilidad(50) == 1)
+        {
+          if ((cpid = fork()) == 0)
+          {
+            printf("INICIANDO PROCESO.\n");
+            pthread_t tid;
+
+            Pthread_create(&tid, NULL, thread, NULL);
+
+            sleep(intervalo / 1000);
+
+            Pthread_exit(NULL);
+          }
+          else if (cpid == -1)
+          {
+            perror("fork");
+            exit(EXIT_FAILURE);
+          }
+          else
+            waitpid(cpid, &status, WUNTRACED | WCONTINUED);
+          printf("[!] PROCESO TERMINADO\n");
+          // return 0;
+        }
       }
       else
       {
@@ -148,7 +189,7 @@ int main(int argc, char *argv[])
     else
     {
       srand(time(NULL));
-      printf("%d",probabilidad(40));
+      printf("%d", probabilidad(40));
       printf("\n");
       printf("No se puede crear una matriz con un valor par. No hagas wuebadas "
              "\n");
@@ -160,7 +201,7 @@ int main(int argc, char *argv[])
   {
     for (int j = 0; j < dimension; j++)
     {
-      printf("%s", arreglo[i][j]);
+      printf("%d", arreglo[i][j]);
     }
     printf("\n");
   }
