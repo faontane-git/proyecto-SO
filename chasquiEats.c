@@ -36,15 +36,17 @@ int separar_tokens(char *linea, char *delim, char *buf[])
   return i;
 }
 
-void imprimirMatrix(int **arreglo, int dimension)
+// Para usar esta función para calcular la probabilidad que se necesite
+bool probabilidad(int pProbabilidad)
 {
-  for (int i = 0; i < dimension; i++)
+  float x = rand() % (101) / 100.0f;
+  if (x <= (pProbabilidad/100.0f))
   {
-    for (int j = 0; j < dimension; j++)
-    {
-      printf("%d", arreglo[i][j]);
-    }
-    printf("\n ");
+    return true;
+  }
+  else
+  {
+    return false;
   }
 }
 
@@ -54,12 +56,7 @@ int num_aleatorio(int dimension)
   numAleatoreo = rand() % dimension;
   return numAleatoreo;
 }
-
-char arreglo_aleatorio(int dimension)
-{
-  char arreglo[2];
-  return *arreglo;
-}
+ 
 
 int main(int argc, char *argv[])
 {
@@ -71,12 +68,13 @@ int main(int argc, char *argv[])
   int restaurantes = (int)strtol(argv[2], NULL, 10);
   int intervalo = (int)strtol(argv[3], NULL, 10);
   int motorizados = (int)strtol(argv[4], NULL, 10);
-  int kilometros = (int)strtol(argv[2], NULL, 10);
+  int kilometros = (int)strtol(argv[5], NULL, 10);
   int arreglo[dimension][dimension];
 
   if (argc != 6)
   {
-    printf("No hagas wuebadas ingresa bien\n");
+    printf("¡Error de Ingreso!\n");
+    print_help();
     exit(1);
   }
   else
@@ -88,6 +86,10 @@ int main(int argc, char *argv[])
     {
       if (dimension > 1)
       {
+        // Mensaje Principal
+        printf("Grilla de %dx%d, %d restaurantes, intervalo %d milisengundos, %d morotizados, %d kilómetros de distancia\n", dimension, dimension, restaurantes, intervalo, motorizados, kilometros);
+
+        // Creación de la Matrix
         arreglo[dimension][dimension];
         for (int i = 0; i < dimension; i++)
         {
@@ -127,35 +129,41 @@ int main(int argc, char *argv[])
           if (arreglo[num1][num2] == 0)
           {
             arreglo[num1][num2] = 2;
-            contador2+= 1;
+            contador2 += 1;
           }
           else
           {
             continue;
           }
         }
+        // Ubicación de los clientes
       }
       else
       {
+
         printf("No se puede crear una matriz de valor menor a 1");
         exit(1);
       }
     }
     else
     {
+      srand(time(NULL));
+      printf("%d",probabilidad(40));
+      printf("\n");
       printf("No se puede crear una matriz con un valor par. No hagas wuebadas "
              "\n");
       exit(1);
     }
   }
 
-for(int i=0;i<dimension;i++){
-  for(int j=0;j<dimension;j++){
-    printf("%d",arreglo[i][j]);
+  for (int i = 0; i < dimension; i++)
+  {
+    for (int j = 0; j < dimension; j++)
+    {
+      printf("%s", arreglo[i][j]);
+    }
+    printf("\n");
   }
-  printf("\n");
-}
-
 
   return 0;
 }
