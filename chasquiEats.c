@@ -6,15 +6,8 @@
 #include <time.h> /* Nueva librería necesaria para la función srand */
 
 int motorizadosDisponibles = 0;
-
-struct motorizados
-{
-  int coordenada_x;
-  int coordenada_y;
-  bool disponible;
-  bool trabajando;
-  int recorrido;
-};
+int dimension = 0;
+int *arreglo;
 
 void print_help()
 /******************************************************************************/
@@ -40,6 +33,18 @@ bool probabilidad(int pProbabilidad)
   }
 }
 
+void imprimirMatriz(int *p, int dimension)
+{
+  for (int i = 0; i < dimension; i++)
+  {
+    for (int j = 0; j < dimension; j++)
+    {
+      printf("%d", *(&arreglo + i * dimension + j));
+    }
+    printf("\n");
+  }
+}
+
 int num_aleatorio(int dimension)
 {
   int numAleatoreo = 0;
@@ -47,11 +52,46 @@ int num_aleatorio(int dimension)
   return numAleatoreo;
 }
 
+int *realizar_matrix(int dimension)
+{
+  int matrix[dimension][dimension];
+  for (int i = 0; i < dimension; i++)
+  {
+    for (int j = 0; j < dimension; j++)
+    {
+      matrix[i][j] = 0;
+    }
+  }
+
+  return matrix;
+}
+
+void ingresar_datos(int etiqueta, int coordenada_X, int coordenada_Y, int puntero_matrix)
+{
+}
+
 // FUNCIÓN QUE EJECUTARÁ CADA HILO
 /******************************************************************************/
 void *thread(void *vargp)
 {
-  printf("Hola MUNDO");
+  int contador3 = 0;
+  while (contador3 != 1)
+  {
+    int num1 = 0;
+    int num2 = 0;
+    srand(time(NULL));
+    num1 = num_aleatorio(dimension);
+    num2 = num_aleatorio(dimension);
+    if (*(&arreglo + num1 * dimension + num2) == 0)
+    {
+      *(&arreglo + num1 * dimension + num2) = 3;
+      contador3 += 1;
+    }
+    else
+    {
+      continue;
+    }
+  }
 }
 
 int main(int argc, char *argv[])
@@ -61,13 +101,12 @@ int main(int argc, char *argv[])
   int i, x, ysize, max, opt, status = 0;
   int n = get_nprocs() - 1;
   pid_t cpid;
-  int dimension = (int)strtol(argv[1], NULL, 10);
+  dimension = (int)strtol(argv[1], NULL, 10);
   int restaurantes = (int)strtol(argv[2], NULL, 10);
   int intervalo = (int)strtol(argv[3], NULL, 10);
   int motorizados = (int)strtol(argv[4], NULL, 10);
   motorizadosDisponibles = motorizados;
   int kilometros = (int)strtol(argv[5], NULL, 10);
-  int arreglo[dimension][dimension];
 
   if (argc != 6)
   {
@@ -88,6 +127,7 @@ int main(int argc, char *argv[])
         printf("Grilla de %dx%d, %d restaurantes, intervalo %d milisengundos, %d morotizados, %d kilómetros de distancia\n", dimension, dimension, restaurantes, intervalo, motorizados, kilometros);
 
         // Creación de la Matrix
+        /*
         arreglo[dimension][dimension];
         for (int i = 0; i < dimension; i++)
         {
@@ -96,7 +136,10 @@ int main(int argc, char *argv[])
             arreglo[i][j] = 0;
           }
         }
+        */
+        arreglo = realizar_matrix(dimension);
         // Ubicación de los restuarantes
+
         int contador1 = 0;
         while (contador1 != dimension)
         {
@@ -105,9 +148,9 @@ int main(int argc, char *argv[])
           srand(time(NULL));
           num1 = num_aleatorio(dimension);
           num2 = num_aleatorio(dimension);
-          if (arreglo[num1][num2] == 0)
+          if (*(&arreglo + num1 * dimension + num2) == 0)
           {
-            arreglo[num1][num2] = 1;
+            *(&arreglo + num1 * dimension + num2) = 1;
             contador1 += 1;
           }
           else
@@ -115,7 +158,9 @@ int main(int argc, char *argv[])
             continue;
           }
         }
+
         // Ubicación de los motorizados
+
         int contador2 = 0;
         while (contador2 != motorizados)
         {
@@ -124,9 +169,9 @@ int main(int argc, char *argv[])
           srand(time(NULL));
           num1 = num_aleatorio(dimension);
           num2 = num_aleatorio(dimension);
-          if (arreglo[num1][num2] == 0)
+          if (*(&arreglo + num1 * dimension + num2) == 0)
           {
-            arreglo[num1][num2] = 2;
+            *(&arreglo + num1 * dimension + num2) = 2;
             contador2 += 1;
           }
           else
@@ -134,6 +179,7 @@ int main(int argc, char *argv[])
             continue;
           }
         }
+
         // Ubicación de los clientes
         while (motorizadosDisponibles > 0)
         {
@@ -143,7 +189,10 @@ int main(int argc, char *argv[])
           {
             Pthread_create(&tid, NULL, thread, NULL);
           }
+          motorizadosDisponibles--;
         }
+
+        imprimirMatriz(&arreglo, dimension);
       }
       else
       {
@@ -158,15 +207,6 @@ int main(int argc, char *argv[])
              "\n");
       exit(1);
     }
-  }
-
-  for (int i = 0; i < dimension; i++)
-  {
-    for (int j = 0; j < dimension; j++)
-    {
-      printf("%d", arreglo[i][j]);
-    }
-    printf("\n");
   }
 
   return 0;
