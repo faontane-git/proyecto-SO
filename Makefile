@@ -1,7 +1,7 @@
 FUNC = csapp.o csapp.h
 CC = gcc
-FLAGS = -O2 -Wall -I . -o
-LIB = -lpthread
+FLAGS = -O2 -Wall -I . -o 
+LIB = -lpthread -lm
 
 merge: chasquiEats.o $(FUNC)
 	$(CC) $(FLAGS) chasquiEats chasquiEats.o csapp.o $(LIB)

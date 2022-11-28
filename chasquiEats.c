@@ -4,17 +4,25 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h> /* Nueva librería necesaria para la función srand */
+#include <math.h>
 
 int motorizadosDisponibles = 0;
 int dimension = 0;
 int *arreglo;
 
+struct recorrido
+{
+  int ejeX;
+  int ejeY;
+  int distancia_recorrida;
+};
+
 void print_help()
 /******************************************************************************/
 {
-  printf("Este programa que permite hacer pedidos \n"
+  printf("Este programa que permite crear y monitoriar los pedidos de una emperesa\n"
          "uso:\n"
-         "		-h\n"
+         "Primero Compile el programa usando make\n"
          "Opciones:\n"
          " -h	Ayuda,			Muestra este mensaje\n");
 }
@@ -66,14 +74,21 @@ int *realizar_matrix(int dimension)
   return matrix;
 }
 
-void ingresar_datos(int etiqueta, int coordenada_X, int coordenada_Y, int puntero_matrix)
+double calcularDistancia(int x1, int y1, int x2, int y2)
 {
+  /*
+      Aplicar la fórmula que dice:
+      distancia = raiz_cuadrada_de(elevar_al_cuadrado(x1-x2) + elevar_al_cuadrado(y1-y2))
+      Nota: no importa el orden de los puntos ni si la distancia al restar es negativa
+  */
+  return sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2));
 }
 
 // FUNCIÓN QUE EJECUTARÁ CADA HILO
 /******************************************************************************/
 void *thread(void *vargp)
 {
+  // Ubicación del cliente
   int contador3 = 0;
   while (contador3 != 1)
   {
@@ -91,6 +106,24 @@ void *thread(void *vargp)
     {
       continue;
     }
+  }
+
+  // Ofrecer Dinero cliente->Motorizado
+  float x = rand() % (101);
+}
+
+void seleccion_motorizado(int distancia_z)
+{
+  for (int i = 0; i < dimension; i++)
+  {
+    for (int j = 0; j < dimension; j++)
+    {
+      int objeto=*(&arreglo + i * dimension + j);
+      if(objeto==1){
+
+      }
+    }
+    printf("\n");
   }
 }
 
@@ -127,16 +160,7 @@ int main(int argc, char *argv[])
         printf("Grilla de %dx%d, %d restaurantes, intervalo %d milisengundos, %d morotizados, %d kilómetros de distancia\n", dimension, dimension, restaurantes, intervalo, motorizados, kilometros);
 
         // Creación de la Matrix
-        /*
-        arreglo[dimension][dimension];
-        for (int i = 0; i < dimension; i++)
-        {
-          for (int j = 0; j < dimension; j++)
-          {
-            arreglo[i][j] = 0;
-          }
-        }
-        */
+
         arreglo = realizar_matrix(dimension);
         // Ubicación de los restuarantes
 
