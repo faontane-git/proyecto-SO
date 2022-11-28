@@ -118,12 +118,27 @@ void seleccion_motorizado(int distancia_z)
   {
     for (int j = 0; j < dimension; j++)
     {
-      int objeto=*(&arreglo + i * dimension + j);
-      if(objeto==1){
-
+      int objeto1 = *(&arreglo + i * dimension + j);
+      if (objeto1 == 2)
+      {
+        for (int k = 0; k < dimension; k++)
+        {
+          for (int l = 0; l < dimension; l++)
+          {
+            int objeto2 = *(&arreglo + i * dimension + j);
+            if(objeto2==1){
+              double resultado=calcularDistancia(j,i,l,k);
+              if(resultado<=distancia_z){
+                struct recorrido motociclista;
+                motociclista.distancia_recorrida=resultado;
+                motociclista.ejeX=j;
+                motociclista.ejeY=i;
+              }
+            }
+          }
+        }
       }
     }
-    printf("\n");
   }
 }
 
