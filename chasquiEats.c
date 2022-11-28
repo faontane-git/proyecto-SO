@@ -23,8 +23,12 @@ void print_help()
   printf("Este programa que permite crear y monitoriar los pedidos de una emperesa\n"
          "uso:\n"
          "Primero Compile el programa usando make\n"
-         "Opciones:\n"
-         " -h	Ayuda,			Muestra este mensaje\n");
+         "Luego de eso ejectue el prgrama con el siguiente comando ./chasquiEats n1, n2. n3, n4, n5\n"
+         "Donde n1 es el número de tamaño de la grilla, n2 un número que respresenta los resturantes\n"
+         "disponibles en la grilla, n3 el intervalo en valor de milisegundos para ciertos procesos, n4 la cantidad\n"
+         "de motorizados disponibles y n5 la cantidad de kilómetros de distancia.\n"
+         "Si no lo ingresa tal como está en el paso dos el programa le lanzará esta  alerta y no podrá continuar.\n"
+         "\n");
 }
 
 // Para usar esta función para calcular la probabilidad que se necesite
@@ -126,13 +130,15 @@ void seleccion_motorizado(int distancia_z)
           for (int l = 0; l < dimension; l++)
           {
             int objeto2 = *(&arreglo + i * dimension + j);
-            if(objeto2==1){
-              double resultado=calcularDistancia(j,i,l,k);
-              if(resultado<=distancia_z){
+            if (objeto2 == 1)
+            {
+              double resultado = calcularDistancia(j, i, l, k);
+              if (resultado <= distancia_z)
+              {
                 struct recorrido motociclista;
-                motociclista.distancia_recorrida=resultado;
-                motociclista.ejeX=j;
-                motociclista.ejeY=i;
+                motociclista.distancia_recorrida = resultado;
+                motociclista.ejeX = j;
+                motociclista.ejeY = i;
               }
             }
           }
@@ -237,6 +243,7 @@ int main(int argc, char *argv[])
       {
 
         printf("No se puede crear una matriz de valor menor a 1");
+        print_help();
         exit(1);
       }
     }
@@ -244,6 +251,7 @@ int main(int argc, char *argv[])
     {
       printf("No se puede crear una matriz con un valor par."
              "\n");
+      print_help();
       exit(1);
     }
   }
